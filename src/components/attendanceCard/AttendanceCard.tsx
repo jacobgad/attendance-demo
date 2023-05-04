@@ -5,7 +5,7 @@ import { getInitials } from "../../utils/utils";
 import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "../../hooks/useDebounce";
 
-type AttendanceState = "unknown" | "absent" | "present";
+export type AttendanceState = "unknown" | "absent" | "present";
 
 type AttendanceCardProps = {
 	name: string;
@@ -21,8 +21,8 @@ const cardStyles = cva(
 		variants: {
 			attendance: {
 				unknown: "border-gray-500",
-				present: "border-green-500 shadow-lg shadow-green-500/30",
-				absent: "border-red-500 shadow-lg shadow-red-500/30",
+				present: "border-green-500 shadow-md shadow-green-500/30",
+				absent: "border-red-500 shadow-md shadow-red-500/30",
 			},
 			isLoading: {
 				true: "animate-pulse",
@@ -70,8 +70,10 @@ export default function AttendanceCard({
 	const initials = useMemo(() => getInitials(name), [name]);
 
 	useEffect(() => {
+		if (isLoading) return;
+		if (debouncedAttendance === props.attendance) return;
 		onChange && onChange(debouncedAttendance);
-	}, [debouncedAttendance, onChange]);
+	}, [debouncedAttendance, props.attendance, isLoading, onChange]);
 
 	return (
 		<button

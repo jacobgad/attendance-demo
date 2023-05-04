@@ -4,7 +4,7 @@ import AttendanceCard from "./AttendanceCard";
 import { sub } from "date-fns";
 
 const meta: Meta<typeof AttendanceCard> = {
-	title: "Attendance Card",
+	title: "Attendance/Card",
 	component: AttendanceCard,
 };
 
