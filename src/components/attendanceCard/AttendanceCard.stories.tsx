@@ -14,10 +14,26 @@ type Story = StoryObj<typeof AttendanceCard>;
 
 const lastAttended = sub(new Date(), { weeks: 3 });
 
+export const Default: Story = {
+	args: {
+		name: "Jonathan Davies",
+		lastAttended,
+		attendance: "unknown",
+	},
+};
+
 export const Present: Story = {
 	args: {
 		name: "Jonathan Davies",
 		lastAttended,
 		attendance: "present",
+	},
+};
+
+export const Absent: Story = {
+	args: {
+		name: "Jonathan Davies",
+		lastAttended,
+		attendance: "absent",
 	},
 };

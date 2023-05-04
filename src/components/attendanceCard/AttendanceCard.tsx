@@ -15,22 +15,25 @@ type AttendanceCardProps = {
 	onChange?: (attendance: AttendanceState) => void;
 };
 
-const cardStyles = cva("w-full max-w-xs border rounded-xl flex px-4 py-5 text-left gap-3", {
-	variants: {
-		attendance: {
-			unknown: "border-gray-500",
-			present: "border-green-500",
-			absent: "border-red-500",
+const cardStyles = cva(
+	"w-full max-w-xs border rounded-xl flex px-4 py-5 text-left gap-3 transition-shadow",
+	{
+		variants: {
+			attendance: {
+				unknown: "border-gray-500",
+				present: "border-green-500 shadow-lg shadow-green-500/30",
+				absent: "border-red-500 shadow-lg shadow-red-500/30",
+			},
+			isLoading: {
+				true: "animate-pulse",
+			},
+			defaultVariants: {
+				attendance: "unknown",
+				isLoading: false,
+			},
 		},
-		isLoading: {
-			true: "animate-pulse",
-		},
-		defaultVariants: {
-			attendance: "unknown",
-			isLoading: false,
-		},
-	},
-});
+	}
+);
 
 const iconStyles = cva(
 	"rounded-full w-10 h-10 flex justify-center items-center self-center p-2 uppercase",
