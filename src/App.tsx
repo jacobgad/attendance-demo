@@ -1,5 +1,5 @@
 import { sub } from "date-fns";
-import AttendanceCard from "./components/AttendanceCard";
+import AttendanceCard from "./components/attendanceCard/AttendanceCard";
 
 export default function App() {
 	return (
@@ -12,7 +12,7 @@ export default function App() {
 						name="jonathan davies"
 						lastAttended={sub(Date.now(), { weeks: 3 })}
 						attendance="present"
-						loading={true}
+						isLoading={false}
 					/>
 				</li>
 			</ul>

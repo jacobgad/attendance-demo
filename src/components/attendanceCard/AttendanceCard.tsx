@@ -1,29 +1,33 @@
 import { intlFormatDistance } from "date-fns";
 import { cva } from "class-variance-authority";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { getInitials } from "../utils/utils";
-import { useMemo } from "react";
+import { getInitials } from "../../utils/utils";
+import { useEffect, useMemo, useState } from "react";
+import { useDebounce } from "../../hooks/useDebounce";
+
+type AttendanceState = "unknown" | "absent" | "present";
 
 type AttendanceCardProps = {
 	name: string;
 	lastAttended: Date;
-	attendance?: "unknown" | "absent" | "present";
-	loading?: boolean;
+	attendance: AttendanceState;
+	isLoading?: boolean;
+	onChange?: (attendance: AttendanceState) => void;
 };
 
-const cardStyles = cva("w-full border rounded-xl flex px-4 py-5 text-left gap-3", {
+const cardStyles = cva("w-full max-w-xs border rounded-xl flex px-4 py-5 text-left gap-3", {
 	variants: {
 		attendance: {
 			unknown: "border-gray-500",
 			present: "border-green-500",
 			absent: "border-red-500",
 		},
-		loading: {
+		isLoading: {
 			true: "animate-pulse",
 		},
 		defaultVariants: {
 			attendance: "unknown",
-			loading: false,
+			isLoading: false,
 		},
 	},
 });
@@ -44,11 +48,33 @@ const iconStyles = cva(
 	}
 );
 
-export default function AttendanceCard({ name, attendance, ...props }: AttendanceCardProps) {
+function toggleAttendance(current: AttendanceState) {
+	const options: AttendanceState[] = ["unknown", "present", "absent"];
+	const nextIdx = options.indexOf(current) + 1;
+	if (nextIdx < options.length) return options[nextIdx];
+	return options[0];
+}
+
+export default function AttendanceCard({
+	name,
+	onChange,
+	isLoading = false,
+	...props
+}: AttendanceCardProps) {
+	const [attendance, setAttendance] = useState(props.attendance);
+	const debouncedAttendance = useDebounce(attendance, 500);
+
 	const initials = useMemo(() => getInitials(name), [name]);
 
+	useEffect(() => {
+		onChange && onChange(debouncedAttendance);
+	}, [debouncedAttendance, onChange]);
+
 	return (
-		<button className={cardStyles({ attendance, loading: props.loading })}>
+		<button
+			onClick={() => setAttendance((current) => toggleAttendance(current))}
+			className={cardStyles({ attendance, isLoading })}
+		>
 			<div className={iconStyles({ attendance })}>
 				{attendance === "present" && <CheckIcon />}
 				{attendance === "absent" && <XMarkIcon />}
